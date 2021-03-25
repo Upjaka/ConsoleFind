@@ -32,7 +32,7 @@ public class FindLauncher {
         }
 
         try {
-            List<String> result = Finder.find(fileName, startDirectory, subdirectories);
+            final List<String> result = Finder.find(fileName, startDirectory, subdirectories);
             if (result.isEmpty()) {
                 System.out.println("File wasn't found");
             } else {
