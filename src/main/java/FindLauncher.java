@@ -4,7 +4,6 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 public class FindLauncher {
@@ -17,11 +16,11 @@ public class FindLauncher {
     @Argument(required = true, metaVar = "FileName", usage = "Search file name")
     private String fileName;
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IllegalDirectoryName {
         new FindLauncher().launch(args);
     }
 
-    private void launch(String[] args) throws FileNotFoundException {
+    private void launch(String[] args) throws IllegalDirectoryName {
         CmdLineParser parser = new CmdLineParser(this);
 
         try {
@@ -33,7 +32,7 @@ public class FindLauncher {
         }
 
         if (new File(startDirectory).listFiles() == null) {
-            System.err.println("Directory not found");
+            System.err.printf("Directory \"%1$s\" was not found%n", startDirectory);
         } else {
             final List<File> result = new Finder(startDirectory, subdirectories).find(fileName);
             if (result.isEmpty()) {
