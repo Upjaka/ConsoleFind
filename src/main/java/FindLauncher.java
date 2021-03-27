@@ -3,12 +3,13 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
 public class FindLauncher {
     @Option(name = "-d", metaVar = "Directory", usage = "Search directory")
-    private String startDirectory;
+    private String startDirectory = ".";
 
     @Option(name = "-r", metaVar = "Subdirectories", usage = "Including subdirectories")
     private boolean subdirectories;
@@ -16,11 +17,11 @@ public class FindLauncher {
     @Argument(required = true, metaVar = "FileName", usage = "Search file name")
     private String fileName;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         new FindLauncher().launch(args);
     }
 
-    private void launch(String[] args) {
+    private void launch(String[] args) throws FileNotFoundException {
         CmdLineParser parser = new CmdLineParser(this);
 
         try {
@@ -31,18 +32,18 @@ public class FindLauncher {
             return;
         }
 
-        try {
-            final List<String> result = Finder.find(fileName, startDirectory, subdirectories);
+        if (new File(startDirectory).listFiles() == null) {
+            System.err.println("Directory not found");
+        } else {
+            final List<File> result = new Finder(startDirectory, subdirectories).find(fileName);
             if (result.isEmpty()) {
                 System.out.println("File wasn't found");
             } else {
                 System.out.println("Found:");
-                for (String line : result) {
-                    System.out.println(line);
+                for (File file : result) {
+                    System.out.println(file.getPath());
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.err.println("Directory not found");
         }
     }
 }

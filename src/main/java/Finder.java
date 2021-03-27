@@ -6,28 +6,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Finder {
-    public static List<String> find(final String fileName, final String startDirectory,
-                                    final boolean subDir) throws FileNotFoundException {
-        List<String> result = new ArrayList<>();
-        final File dir = new File(startDirectory);
+
+    private final String startDir;
+    private final boolean subDir;
+
+    public Finder(final String startDirectory, final boolean subDir) {
+        this.startDir = startDirectory;
+        this.subDir = subDir;
+    }
+
+    public List<File> find(final String fileName) throws FileNotFoundException {
+        List<File> result = new ArrayList<>();
+        final File dir = new File(startDir);
         final File[] files = dir.listFiles();
         if (files == null) {
-            throw new FileNotFoundException();
-        } else {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    if (subDir) {
-                        final String newStartDir = startDirectory + "/" + file.getName();
-                        final List<String> find = find(fileName, newStartDir, true);
-                        for (String name : find) {
-                            result.add(file.getName() + "/" + name);
-                        }
-                    }
-                } else {
-                    final Pattern pattern = Pattern.compile(fileName);
-                    final Matcher matcher = pattern.matcher(file.getName());
-                    if (matcher.find()) result.add(file.getName());
-                }
+            throw new FileNotFoundException(); // Создать свое исключение
+        }
+        Pattern pattern = Pattern.compile(fileName);
+        for (File file : files) {
+            final Matcher matcher = pattern.matcher(file.getName());
+            if (matcher.find()) result.add(file);
+            if (file.isDirectory() && subDir) {
+                final List<File> find = new Finder(startDir + "/" + file.getName(),
+                        true).find(fileName);
+                result.addAll(find);
             }
         }
         return result;
