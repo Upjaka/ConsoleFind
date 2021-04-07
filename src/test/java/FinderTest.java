@@ -11,11 +11,12 @@ class FinderTest {
     final File dir = new File("files/dir");
     final File dir2 = new File("files/dir/dir2");
     final File file = new File("files/file.txt");
-    final File png = new File("files/png.png");
+    final File png = new File("files/image.png");
     final File test = new File("files/test.txt");
     final File test1 = new File("files/test1.txt");
     final File dirFile = new File("files/dir/file.txt");
     final File dirDir2File = new File("files/dir/dir2/file.txt");
+    final List<File> text = Arrays.asList(dirDir2File, dirFile, file, test, test1);
 
     @Test
     void findException() {
@@ -28,6 +29,7 @@ class FinderTest {
         Finder finder = new Finder("files", false);
         assertEquals(Collections.EMPTY_LIST, finder.find("notExists"));
         assertEquals(Collections.singletonList(file), finder.find("file.txt"));
+        assertEquals(Arrays.asList(dir, file, png, test, test1), finder.find(""));
     }
 
     @Test
@@ -43,7 +45,12 @@ class FinderTest {
     @Test
     void findRegex() throws IllegalDirectoryName {
         Finder finder = new Finder("files", true);
-        List<File> expected = Arrays.asList(dirDir2File, dirFile, file, test, test1);
-        assertEquals(expected, finder.find("t*t"));
+        assertEquals(text, finder.find(".txt"));
+        assertEquals(text, finder.find("t.*t"));
+        assertEquals(Arrays.asList(dir2, test1), finder.find("[0-9]"));
+        assertEquals(Arrays.asList(test, test1), finder.find("^t"));
+        assertEquals(text, finder.find("t$"));
+        assertEquals(Arrays.asList(dir, dir2, dirDir2File, dirFile, file), finder.find("file|dir"));
+        assertEquals(Collections.singletonList(png), finder.find("[a-z]{5}"));
     }
 }

@@ -16,11 +16,6 @@ public class Finder {
         this.subDir = subDir;
     }
 
-    public Finder(final Path startDirectory, final boolean subDir) {
-        this.startDir = startDirectory;
-        this.subDir = subDir;
-    }
-
     public List<File> find(final String fileName) throws IllegalDirectoryName {
         List<File> result = new ArrayList<>();
         final File dir = startDir.toFile();

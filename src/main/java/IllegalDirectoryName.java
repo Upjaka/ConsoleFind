@@ -1,5 +1,5 @@
 public class IllegalDirectoryName extends Throwable {
-    private String message;
+    private final String message;
 
     public IllegalDirectoryName(String dirName) {
         message = String.format("Directory \"%1$s\" does not exist", dirName);

@@ -33,16 +33,16 @@ public class FindLauncher {
 
         if (new File(startDirectory).listFiles() == null) {
             System.err.printf("Directory \"%1$s\" was not found%n", startDirectory);
-        } else {
-            final List<File> result = new Finder(startDirectory, subdirectories).find(fileName);
-            if (result.isEmpty()) {
-                System.out.println("File wasn't found");
-            } else {
-                System.out.println("Found:");
-                for (File file : result) {
-                    System.out.println(file.getPath());
-                }
-            }
+            return;
+        }
+        final List<File> result = new Finder(startDirectory, subdirectories).find(fileName);
+        if (result.isEmpty()) {
+            System.out.println("File wasn't found");
+            return;
+        }
+        System.out.println("Found:");
+        for (File file : result) {
+            System.out.println(file.getPath());
         }
     }
 }
