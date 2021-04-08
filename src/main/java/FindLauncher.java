@@ -31,15 +31,11 @@ public class FindLauncher {
             return;
         }
 
-        if (new File(startDirectory).listFiles() == null) {
+        if (!(new File(startDirectory).isDirectory())) {
             System.err.printf("Directory \"%1$s\" was not found%n", startDirectory);
             return;
         }
         final List<File> result = new Finder(startDirectory, subdirectories).find(fileName);
-        if (result.isEmpty()) {
-            System.out.println("File wasn't found");
-            return;
-        }
         System.out.println("Found:");
         for (File file : result) {
             System.out.println(file.getPath());
