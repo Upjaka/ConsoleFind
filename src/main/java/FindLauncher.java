@@ -31,7 +31,7 @@ public class FindLauncher {
             return;
         }
 
-        if (!(new File(startDirectory).isDirectory())) {
+        if (!new File(startDirectory).isDirectory()) {
             System.err.printf("Directory \"%1$s\" was not found%n", startDirectory);
             return;
         }
